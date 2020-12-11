@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 import PostMessage from "../models/postMessage.js";
 
 // this is where the functions for the routes are 
@@ -27,12 +29,24 @@ export const createPost = async (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
-    const { id: _id } = req.params;
-    const post = req.body;
+    const { id } = req.params;
+    const { title, message, creator, selectedFile, tags } = req.body;
 
-    if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send("No post with that ID");
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-    const updatedPost = await PostMessage.findByIdAndUpdate(_id, post,  { new: _true });
+    const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
+
+    await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
 
     res.json(updatedPost);
-};
+}
+
+export const deletePost = async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+
+    await PostMessage.findByIdAndRemove(id);
+
+    res.json({ message: "Post deleted successfully"});
+}
