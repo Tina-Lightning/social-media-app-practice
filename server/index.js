@@ -17,6 +17,10 @@ app.use(cors());
 // every route within postRoutes will start with /posts
 app.use("/posts", postRoutes);
 
+app.get("/", (req, res) => {
+    res.send("Hello to Memories");
+});
+
 //const CONNECTION_URL = "mongodb+srv://dbUser:GAonI7pxKMYgHu4J@cluster0.i8oie.mongodb.net/<dbname>?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 5000;
 
